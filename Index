@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+    <link rel="stylesheet" href="заметки.htm">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .schedule-container {
+            background-color: #001;
+            color: white;
+            padding: 15px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .user-info {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .user-info h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .user-info p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: #b0c4de;
+        }
+
+        .timetable {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .timetable div {
+            text-align: center;
+            margin: 5px 0;
+            flex: 1 0 50%;
+        }
+
+        .timetable div p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .timetable div span {
+            font-size: 12px;
+            color: #b0c4de;
+        }
+
+        .day-title {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        /* Оптимизация под мобильные устройства */
+        @media (max-width: 600px) {
+            .schedule-container {
+                padding: 10px;
+            }
+
+            .header img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .user-info h4 {
+                font-size: 14px;
+            }
+
+            .user-info p {
+                font-size: 10px;
+            }
+
+            .timetable div p {
+                font-size: 12px;
+            }
+
+            .timetable div span {
+                font-size: 10px;
+            }
+
+            .day-title {
+                font-size: 16px;
+            }
+        }
+
+        /* Основной контент после расписания */
+        .content {
+            padding-top: 180px; /* Отступ, чтобы контент не накладывался на фиксированное расписание */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Контейнер для расписания -->
+    <div class="schedule-container">
+        <div class="header">
+            <img src="C:\Users\Huawei\Downloads\Снимок экрана 2024-10-23 152023.png" alt="User profile">
+            <div class="user-info">
+                <h4>Ваше Имя</h4>
+                <p>ваш.домен.почты</p>
+            </div>
+        </div>
+
+        <div class="day-title" id="dayTitle">Понедельник</div>
+
+        <div class="timetable" id="timetable">
+            <!-- Сюда будет динамически вставляться расписание -->
+        </div>
+    </div>
+
+    <!-- Основной контент страницы -->
+    <div class="content">
+        <h1></h1>
+        <p></p>
+    </div>
+
+    <script>
+        // Массивы с расписаниями для каждого дня
+        const schedules = {
+            1: [
+                { subject: "ИЗО", time: "08:00 - 08:45" },
+                { subject: "спорт", time: "09:00 - 09:45" },
+                { subject: "химия", time: "10:00 - 10:45" },
+                { subject: "физика", time: "11:00 - 11:45" },
+                { subject: "Қазақ тілі", time: "11:00 - 11:45" },
+                { subject: "Қазақ әдебиеті", time: "11:00 - 11:45" },
+            ],
+            2: [
+                { subject: "Дүниежүзі тарихы", time: "08:00 - 08:45" },
+                { subject: "Ағылшын тілі", time: "09:00 - 09:45" },
+                { subject: "Алгебра", time: "10:00 - 10:45" },
+                { subject: "Геометрия", time: "11:00 - 11:45" },
+                { subject: "Русский язык", time: "11:00 - 11:45" },
+                { subject: "География", time: "11:00 - 11:45" },
+            ],
+            3: [
+                { subject: "Химия", time: "08:00 - 08:45" },
+                { subject: "Спорт", time: "09:00 - 09:45" },
+                { subject: "Русский язык", time: "10:00 - 10:45" },
+                { subject: "Алгебра", time: "11:00 - 11:45" },
+                { subject: "Қазақ тілі", time: "11:00 - 11:45" },
+                { subject: "Қазақ әдебиеті", time: "11:00 - 11:45" },
+                { subject: "кластный час", time: "11:00 - 11:45" },
+            ],
+            4: [
+                { subject: "Физика", time: "08:00 - 08:45" },
+                { subject: "Ағылшын тілі", time: "09:00 - 09:45" },
+                { subject: "Алгебра", time: "10:00 - 10:45" },
+                { subject: "Геометрия", time: "11:00 - 11:45" },
+                { subject: "Қазақ әдебиеті", time: "11:00 - 11:45" },
+                { subject: "Жахандық", time: "11:00 - 11:45" },
+            ],
+            5: [
+            { subject: "Қазақстан тарихы", time: "11:00 - 11:45" },
+            { subject: "Ағылшын тілі", time: "11:00 - 11:45" },
+            { subject: "Биология", time: "11:00 - 11:45" },
+            { subject: "информатика", time: "11:00 - 11:45" },
+            { subject: "география", time: "11:00 - 11:45" },
+            { subject: "спорт", time: "11:00 - 11:45" },
+            { subject: "Русский язык", time: "11:00 - 11:45" },
+            ],
+        };
+
+        // Названия дней недели
+        const daysOfWeek = {
+            1: "Понедельник",
+            2: "Вторник",
+            3: "Среда",
+            4: "Четверг",
+            5: "Пятница",
+            6: "Суббота",
+            0: "Воскресенье"
+        };
+
+        // Получение текущего дня недели (0 - Воскресенье, 1 - Понедельник и т.д.)
+        const today = new Date().getDay();
+
+        // Функция для отображения расписания
+        function displaySchedule(day) {
+            const timetable = document.getElementById('timetable');
+            const dayTitle = document.getElementById('dayTitle');
+
+            // Устанавливаем заголовок с названием дня
+            dayTitle.textContent = daysOfWeek[day];
+
+            // Очищаем текущее расписание
+            timetable.innerHTML = '';
+
+            // Получаем расписание для текущего дня
+            const scheduleForDay = schedules[day] || [];
+
+            // Добавляем предметы в расписание
+            scheduleForDay.forEach(subject => {
+                const subjectDiv = document.createElement('div');
+                subjectDiv.innerHTML = `<p>${subject.subject}</p><span>${subject.time}</span>`;
+                timetable.appendChild(subjectDiv);
+            });
+        }
+
+        // Отображаем расписание для текущего дня
+        displaySchedule(today);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кнопки для просмотра оценок</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #133056;
+        }
+
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .view-grades-button {
+            background-color: #011;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.4s;
+            margin: 10px;
+            flex: 0 0 calc(50% - 20px);
+            box-sizing: border-box;
+        }
+
+        .view-grades-button:hover {
+            background-color: white;
+            color: black;
+            border: 2px solid #000;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="button-container">
+        <div class="button-container">
+            <button class="view-grades-button">
+                <a href="заметки.htm" target="_blank">Заметки</a>
+            </button>
+        </div>
+        
+        <button class="view-grades-button">
+            <a href="https://kundelik.kz/marks/school/1000008868829/student/1000009019322/period?periodId=final" target="_blank">Посмотреть оценки</a>
+        </button>
+    </div>
+
+</body>
+</html>
+
+
+
+
+
